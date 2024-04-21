@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./formdodaj.css";
+import "./formdodaj.scss";
 import { useLoaderData } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";

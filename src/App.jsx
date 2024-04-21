@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./components/home/Home";
 import Oprema from "./components/oprema/Oprema";
-import "./App.css";
+import "./App.scss";
 import { formZaduziLoader } from "./components/home/zaduzi/formzaduzi/formZaduziLoader";
 import { commonOpremaLoader } from "./components/oprema/commonOpremaLoader";
 import { ToastContainer } from "react-toastify";

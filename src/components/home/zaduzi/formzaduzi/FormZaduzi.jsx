@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./formzaduzi.css";
+import "./formzaduzi.scss";
 import ZaduziTable from "../zaduzitable/ZaduziTable";
 import { useLoaderData } from "react-router-dom";
 

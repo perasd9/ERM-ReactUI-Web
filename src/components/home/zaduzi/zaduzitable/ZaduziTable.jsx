@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import "./zaduzitable.css";
+import "./zaduzitable.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 

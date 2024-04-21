@@ -1,5 +1,5 @@
 import React, { Suspense, useState, lazy, useEffect } from "react";
-import "./prikazstanja.css";
+import "./prikazstanja.scss";
 import { useLoaderData } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 import axios from "axios";
