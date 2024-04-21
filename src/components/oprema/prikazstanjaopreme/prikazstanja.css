@@ -1,0 +1,28 @@
+.prikaz-stanja-section {
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 15rem;
+}
+.prikaz-stanja-section div {
+  display: flex;
+  justify-content: space-between;
+}
+.prikaz-stanja-section .prikaz-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.prikaz-stanja-section .prikaz-group button {
+  font-size: 1rem;
+}
+.prikaz-stanja-section .prikaz-group .prikaz-buttons {
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .prikaz-stanja-section > div {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}/*# sourceMappingURL=prikazstanja.css.map */

@@ -1,0 +1,28 @@
+.prikaz-stanja-section {
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 15rem;
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+  .prikaz-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    button {
+      font-size: 1rem;
+    }
+    .prikaz-buttons {
+      gap: 1rem;
+    }
+  }
+}
+@media (max-width: 900px) {
+  .prikaz-stanja-section > div {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}

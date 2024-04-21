@@ -1,0 +1,60 @@
+.table-zaduzi {
+  margin: 5rem auto;
+  border: 2px solid black;
+  border-radius: 10px;
+
+  width: 100%;
+  thead {
+    color: #000;
+    background-color: #29fd6d;
+    font-size: 1.5rem;
+
+    th {
+      padding: 0.7rem;
+      background-color: #29fd6d;
+    }
+  }
+  tr {
+    font-size: 1.2rem;
+    text-align: center;
+
+    td {
+      padding: 0.8rem;
+    }
+    .firstTd {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+}
+
+.zaduzi-control {
+  text-align: end;
+}
+.btn-delete {
+  width: 35px;
+  height: 35px;
+  padding: 10px;
+  background-color: #d61f2c;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
+.displayed {
+  display: none;
+}
+
+@media (max-width: 1400px) {
+  .table-zaduzi {
+    th,
+    tr {
+      font-size: 1rem;
+    }
+  }
+}
+@media (max-width: 900px) {
+  .table-section {
+    overflow-x: auto;
+  }
+}
