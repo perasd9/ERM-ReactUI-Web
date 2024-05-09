@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 
 function FormDodaj() {
   const { rezultatTipoviOpreme } = useLoaderData();
-
   const tipoviOpreme = rezultatTipoviOpreme.tipoviOpreme;
+  const [podtipoviOpreme, setPodtipoviOpreme] = useState(
+    rezultatTipoviOpreme.podtipoviOpreme
+  );
   const [formErrors, setFormErrors] = useState({});
   const btnDodaj = useRef(null);
   const [formValues, setFormValues] = useState({
@@ -16,6 +18,10 @@ function FormDodaj() {
     inventarskiBroj: "",
     tipOpreme: tipoviOpreme[0].tipOpremeId,
   });
+
+  const [podtipOpreme, setPodtipOpreme] = useState(
+    podtipoviOpreme[0].tipOpremeId
+  );
 
   //dodavanje opreme
   const handleDodajOpremu = async (e) => {
@@ -32,7 +38,7 @@ function FormDodaj() {
           naziv: formValues.naziv,
           kolicina: formValues.kolicina,
           inventarskiBroj: formValues.inventarskiBroj,
-          tipOpremeId: formValues.tipOpreme,
+          tipOpremeId: podtipOpreme,
         },
         {
           "Content-Type": "application/json",
@@ -91,7 +97,15 @@ function FormDodaj() {
         btnDodaj.current?.classList.add("disabled");
       } else btnDodaj.current?.classList.remove("disabled");
     })();
-  }, [formValues]);
+
+    (async () => {
+      const response = await axios.get(
+        `https://localhost:7121/api/tipOpreme/subtypes?subtype=${formValues.tipOpreme}`
+      );
+      setPodtipoviOpreme(response.data);
+      setPodtipOpreme(response.data[0].tipOpremeId);
+    })();
+  }, [formValues, formValues.tipOpreme]);
 
   return (
     <>
@@ -148,11 +162,31 @@ function FormDodaj() {
               name="tipOpreme"
               id=""
               value={formValues.tipOpreme}
-              onChange={(e) =>
-                setFormValues({ ...formValues, tipOpreme: e.target.value })
-              }
+              onChange={async (e) => {
+                setFormValues({ ...formValues, tipOpreme: e.target.value });
+              }}
             >
               {tipoviOpreme.map((tipOpreme) => {
+                if (tipOpreme.nadtipId == null)
+                  return (
+                    <option
+                      value={tipOpreme.tipOpremeId}
+                      key={tipOpreme.tipOpremeId}
+                    >
+                      {tipOpreme.naziv}
+                    </option>
+                  );
+              })}
+            </select>
+          </div>
+          <div className="form-fields">
+            <label htmlFor="tipOpreme">Potdip opreme</label>
+            <select
+              name="podtipOpreme"
+              id=""
+              onChange={(e) => setPodtipOpreme(e.target.value)}
+            >
+              {podtipoviOpreme?.map((tipOpreme) => {
                 return (
                   <option
                     value={tipOpreme.tipOpremeId}

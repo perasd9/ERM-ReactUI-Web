@@ -15,6 +15,22 @@ function PrikazStanja() {
   const [oprema, setOprema] = useState([]);
   const [actions, setActions] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasPreviousPage, setHasPreviousPage] = useState(false);
+
+  const fetchPage = async (page) => {
+    setLoading(true);
+    const response = await axios.get(
+      `https://localhost:7121/api/zaduzivanje?pageIndex=${page}&pageSize=3`
+    );
+    setZaduzivanje(response.data);
+    setLoading(false);
+    setCurrentPage(page);
+    setHasNextPage(response.data.hasNext);
+    setHasPreviousPage(response.data.hasPrevious);
+  };
 
   const handleSortNaziv = async () => {
     setPrikazOprema(true);
@@ -23,9 +39,9 @@ function PrikazStanja() {
     ).data;
     setOprema(response);
   };
+
   const handleSortKolicina = async () => {
     setPrikazOprema(true);
-
     const response = (
       await axios.get("https://localhost:7121/api/oprema/sortperkolicina")
     ).data;
@@ -36,11 +52,11 @@ function PrikazStanja() {
     const data = (
       await axios.get("https://localhost:7121/api/zaduzivanje/groupzaposleni")
     ).data;
-
     setZaduzivanje(data);
     setPrikazOprema(false);
     setActions(false);
   };
+
   const handleGroupKabinet = async () => {
     const data = (
       await axios.get("https://localhost:7121/api/zaduzivanje/groupkabinet")
@@ -53,16 +69,34 @@ function PrikazStanja() {
   const handleRestartPrikaz = async () => {
     setPrikazOprema(false);
     setOprema([]);
-    rezultatZaduzivanja.then((zad) => setZaduzivanje(zad.zaduzivanja));
+    fetchPage(1);
     setActions(true);
+  };
+
+  const onNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      fetchPage(currentPage + 1);
+    }
+  };
+
+  const onPrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      fetchPage(currentPage - 1);
+    }
   };
 
   useEffect(() => {
     rezultatZaduzivanja.then((zad) => {
       setZaduzivanje(zad.zaduzivanja);
+      setTotalPages(zad.zaduzivanja.totalPages);
+      setHasNextPage(zad.zaduzivanja.hasNext);
+      setHasPreviousPage(zad.zaduzivanja.hasPrevious);
       setLoading(false);
     });
   }, []);
+
   return (
     <>
       <div className="prikaz-stanja-section">
@@ -81,7 +115,7 @@ function PrikazStanja() {
                 className="btn-full btn-sortiraj-kolicina"
                 onClick={handleSortKolicina}
               >
-                Kolicna
+                Kolicina
               </button>
             </div>
           </div>
@@ -132,12 +166,94 @@ function PrikazStanja() {
         ) : (
           <ZaduziTable
             prikaziDugme={false}
-            zaduzivanja={zaduzivanje}
+            zaduzivanja={
+              zaduzivanje.items === undefined ? zaduzivanje : zaduzivanje.items
+            }
             prikazOprema={prikazOprema}
             oprema={oprema}
             actions={actions}
           />
         )}
+        <ul
+          className={`pagination-container ${
+            prikazOprema
+              ? "hidden"
+              : zaduzivanje.items === undefined
+              ? "hidden"
+              : ""
+          }`}
+        >
+          <li
+            className={`pagination-item ${hasPreviousPage ? "" : "disabled"}`}
+            onClick={onPrevious}
+          >
+            <div className="arrow left" />
+          </li>
+
+          {Array.from({ length: totalPages }, (_, index) => (
+            <>
+              {index === 0 && (
+                <li
+                  key={`firstPage`}
+                  className={`pagination-item ${
+                    currentPage === index + 1 ? "selected" : ""
+                  }`}
+                  onClick={() => fetchPage(index + 1)}
+                >
+                  {index + 1}
+                </li>
+              )}
+
+              {index === 1 && currentPage - 2 > 0 && (
+                <li className="pagination-item dots" key={`dotsBeforeCurrent`}>
+                  ...
+                </li>
+              )}
+              {index > 0 &&
+                index < totalPages - 1 &&
+                index >= currentPage - 1 &&
+                index <= currentPage + 1 && (
+                  <li
+                    key={index}
+                    className={`pagination-item ${
+                      currentPage === index + 1 ? "selected" : ""
+                    }`}
+                    onClick={() => fetchPage(index + 1)}
+                  >
+                    {index + 1}
+                  </li>
+                )}
+              {currentPage != totalPages &&
+                index === totalPages - 1 &&
+                totalPages - 2 > 1 && (
+                  <li
+                    className="pagination-item dots"
+                    key={`dotsBeforeCurrent`}
+                  >
+                    ...
+                  </li>
+                )}
+              {index === totalPages - 1 && totalPages - 1 != 0 && (
+                <li
+                  className={`pagination-item ${
+                    currentPage === index + 1 ? "selected" : ""
+                  }`}
+                  key={`lastPage`}
+                  onClick={() => fetchPage(index + 1)}
+                >
+                  {totalPages}
+                </li>
+              )}
+            </>
+          ))}
+
+          <li
+            className={`pagination-item ${hasNextPage ? "" : "disabled"}`}
+            onClick={onNext}
+          >
+            <div className="arrow right" />
+          </li>
+        </ul>
       </div>
     </>
   );
