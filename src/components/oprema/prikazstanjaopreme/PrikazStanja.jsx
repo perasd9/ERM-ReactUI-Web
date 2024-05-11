@@ -73,6 +73,32 @@ function PrikazStanja() {
     setActions(true);
   };
 
+  const handleDetaljiOpreme = async (index) => {
+    // const index = e.currentTarget.getAttribute("data-index");
+
+    const opremaZaDetalje = oprema[index];
+
+    const data = (
+      await axios.get(
+        `https://localhost:7121/api/zaduzivanje/peroprema/${opremaZaDetalje.serijskiBroj}`
+      )
+    ).data;
+    setZaduzivanje(data);
+    setPrikazOprema(false);
+  };
+
+  const handleDetaljiZaposlenog = async (zaposleni) => {
+    const zaposleniZaDetalje = zaposleni;
+
+    const data = (
+      await axios.get(
+        `https://localhost:7121/api/zaduzivanje/perzaposleni/${zaposleniZaDetalje.email}`
+      )
+    ).data;
+    setZaduzivanje(data);
+    setPrikazOprema(false);
+  };
+
   const onNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -169,6 +195,8 @@ function PrikazStanja() {
             zaduzivanja={
               zaduzivanje.items === undefined ? zaduzivanje : zaduzivanje.items
             }
+            handleDetaljiOpreme={handleDetaljiOpreme}
+            handleDetaljiZaposlenog={handleDetaljiZaposlenog}
             prikazOprema={prikazOprema}
             oprema={oprema}
             actions={actions}

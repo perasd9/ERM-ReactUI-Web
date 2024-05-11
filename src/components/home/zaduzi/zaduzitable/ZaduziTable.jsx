@@ -12,6 +12,8 @@ function ZaduziTable({
   zaduzivanjaZaSlanje,
   setZaduzivanja,
   setZaduzivanjaZaSlanje,
+  handleDetaljiOpreme,
+  handleDetaljiZaposlenog,
   actions = false,
 }) {
   //btnZaduzi sluzi samo za disable ili enable u slucaju da su ispunjeni uslovi da moze da se salje zahtev serveru
@@ -205,7 +207,30 @@ function ZaduziTable({
               ? oprema.map((op, index) => {
                   return (
                     <tr key={op.serijskiBroj}>
-                      <td>{op.naziv}</td>
+                      <td
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                        }}
+                      >
+                        {op.naziv}{" "}
+                        <button
+                          className="btn-delete"
+                          style={{
+                            width: "90px",
+                            height: "100%",
+                            color: "#ffffff",
+                            fontSize: "0.9rem",
+                            backgroundColor: "#24a0ed",
+                          }}
+                          onClick={() => {
+                            handleDetaljiOpreme(index);
+                          }}
+                          data-index={index}
+                        >
+                          Detalji
+                        </button>
+                      </td>
                       <td>{op.inventarskiBroj}</td>
                       <td>{op.kolicina}</td>
                       <td>{op.tipOpreme.naziv}</td>
@@ -260,6 +285,22 @@ function ZaduziTable({
                           )}
 
                           {zaduzivanje.zaposleni.email}
+                          <button
+                            className="btn-delete"
+                            style={{
+                              width: "90px",
+                              height: "100%",
+                              color: "#ffffff",
+                              fontSize: "0.9rem",
+                              backgroundColor: "#24a0ed",
+                            }}
+                            onClick={() => {
+                              handleDetaljiZaposlenog(zaduzivanje.zaposleni);
+                            }}
+                            data-index={index}
+                          >
+                            Detalji
+                          </button>
                         </td>
                       )}
                       {(zaduzivanje == undefined ||
